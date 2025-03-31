@@ -317,7 +317,7 @@ local function addChatMessage(playerName, message)
         messageCount = messageCount + 1
         local messageLabel = Instance.new("TextLabel")
         messageLabel.Size = UDim2.new(1, 0, 0, 20)
-        messageLabel.BackgroundTransparency = 0.4
+        messageLabel.BackgroundTransparency = 1
         messageLabel.Text = "[" .. messageCount .. "] " .. playerName .. ": " .. message
         messageLabel.TextSize = 14
         messageLabel.Font = Enum.Font.SourceSans
