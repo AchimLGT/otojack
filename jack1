@@ -7,14 +7,17 @@ local TextChatService = game:GetService("TextChatService")
 -- GUI oluşturma
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Parent = player:WaitForChild("PlayerGui")
-ScreenGui.Name = "JumperJackGui"
+ScreenGui.Name = "GrimmngGui"
 
--- Ana çerçeve (Frame) oluşturma ve sürükleme özelliği ekleme
+-- Ana çerçeve (Frame) oluşturma
 local Frame = Instance.new("Frame")
-Frame.Size = UDim2.new(0, 200, 0, 300)
-Frame.Position = UDim2.new(0.5, -100, 0.5, -150)
-Frame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+Frame.Size = UDim2.new(0, 600, 0, 400) -- Yatay dikdörtgen
+Frame.Position = UDim2.new(0.5, -300, 0.5, -200) -- Ortada
+Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- Koyu gri arka plan
 Frame.BorderSizePixel = 0
+local FrameCorner = Instance.new("UICorner")
+FrameCorner.CornerRadius = UDim.new(0, 10)
+FrameCorner.Parent = Frame
 Frame.Parent = ScreenGui
 
 -- Sürükleme için yardımcı değişkenler
@@ -22,7 +25,7 @@ local dragging = false
 local dragInput, dragStart, startPos
 
 Frame.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
         dragging = true
         dragStart = input.Position
         startPos = Frame.Position
@@ -30,14 +33,15 @@ Frame.InputBegan:Connect(function(input)
 end)
 
 Frame.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement then
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
         dragInput = input
     end
 end)
 
 Frame.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
         dragging = false
+        dragInput = nil -- dragInput'u sıfırlıyoruz
     end
 end)
 
@@ -53,67 +57,195 @@ game:GetService("RunService").RenderStepped:Connect(function()
     end
 end)
 
--- Başlangıç TextBox oluşturma (opsiyonel)
+-- Başlık (grimmng)
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(0, 600, 0, 40)
+Title.Position = UDim2.new(0, 0, 0, 5)
+Title.BackgroundColor3 = Color3.fromRGB(20, 20, 20) -- Daha koyu başlık çubuğu
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.Text = "grimmng"
+Title.Font = "AmaticSC"
+Title.TextSize = 24
+Title.BorderSizePixel = 0
+local TitleCorner = Instance.new("UICorner")
+TitleCorner.CornerRadius = UDim.new(0, 10)
+TitleCorner.Parent = Title
+Title.Parent = Frame
+
+-- Sol tarafta sekme çubuğu
+local TabFrame = Instance.new("Frame")
+TabFrame.Size = UDim2.new(0, 150, 0, 360)
+TabFrame.Position = UDim2.new(0, 0, 0, 40)
+TabFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40) -- Biraz daha açık gri
+TabFrame.BorderSizePixel = 0
+TabFrame.Parent = Frame
+
+-- Sekme butonları
+local tabs = {"Giriş", "Jackler", "Karakter", "Görüş"}
+local tabButtons = {}
+local currentTab = "Giriş"
+
+for i, tabName in ipairs(tabs) do
+    local TabButton = Instance.new("TextButton")
+    TabButton.Size = UDim2.new(0, 150, 0, 40)
+    TabButton.Position = UDim2.new(0, 0, 0, (i-1)*45)
+    TabButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    TabButton.TextColor3 = Color3.fromRGB(200, 200, 200)
+    TabButton.Text = tabName
+    TabButton.TextSize = 18
+    TabButton.BorderSizePixel = 0
+    local TabButtonCorner = Instance.new("UICorner")
+    TabButtonCorner.CornerRadius = UDim.new(0, 8)
+    TabButtonCorner.Parent = TabButton
+    TabButton.Parent = TabFrame
+    tabButtons[tabName] = TabButton
+end
+
+-- Sağ tarafta içerik alanı
+local ContentFrame = Instance.new("Frame")
+ContentFrame.Size = UDim2.new(0, 450, 0, 360)
+ContentFrame.Position = UDim2.new(0, 150, 0, 40)
+ContentFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+ContentFrame.BackgroundTransparency = 0.4 -- Şeffaf, sadece düzen için
+ContentFrame.BorderSizePixel = 0
+ContentFrame.Parent = Frame
+
+-- Jackler sekmesi için Jumper Jack GUI elemanları
+local JacklerContent = Instance.new("Frame")
+JacklerContent.Size = UDim2.new(1, 0, 1, 0)
+JacklerContent.Position = UDim2.new(0, 0, 0, 0)
+JacklerContent.BackgroundTransparency = 1
+JacklerContent.Visible = false -- Varsayılan olarak gizli
+JacklerContent.Parent = ContentFrame
+
+-- Başlangıç TextBox
 local StartTextBox = Instance.new("TextBox")
-StartTextBox.Size = UDim2.new(0, 150, 0, 30)
-StartTextBox.Position = UDim2.new(0.5, -75, 0, 20)
-StartTextBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-StartTextBox.TextColor3 = Color3.fromRGB(0, 0, 0)
-StartTextBox.PlaceholderText = "Başlangıç (opsiyonel, örn: 5)"
+StartTextBox.Size = UDim2.new(0, 420, 0, 30) -- Genişlik 400 piksele çıkarıldı
+StartTextBox.Position = UDim2.new(0, 20, 0, 40) -- x = 40, sağa hizalı olacak
+StartTextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+StartTextBox.TextColor3 = Color3.fromRGB(200, 200, 200)
+StartTextBox.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
+StartTextBox.PlaceholderText = "Başlangıç (örn: 5)"
 StartTextBox.Text = ""
-StartTextBox.Parent = Frame
+StartTextBox.BorderSizePixel = 0
+local StartTextBoxCorner = Instance.new("UICorner")
+StartTextBoxCorner.CornerRadius = UDim.new(0, 8)
+StartTextBoxCorner.Parent = StartTextBox
+StartTextBox.Parent = JacklerContent
 
--- Bitiş TextBox oluşturma
+-- Bitiş TextBox
 local EndTextBox = Instance.new("TextBox")
-EndTextBox.Size = UDim2.new(0, 150, 0, 30)
-EndTextBox.Position = UDim2.new(0.5, -75, 0, 60)
-EndTextBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-EndTextBox.TextColor3 = Color3.fromRGB(0, 0, 0)
-EndTextBox.PlaceholderText = "Bitiş (boş bırakılırsa 9999)"
+EndTextBox.Size = UDim2.new(0, 420, 0, 30) -- Genişlik 400 piksele çıkarıldı
+EndTextBox.Position = UDim2.new(0, 20, 0, 80) -- x = 40, sağa hizalı olacak
+EndTextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+EndTextBox.TextColor3 = Color3.fromRGB(200, 200, 200)
+EndTextBox.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
+EndTextBox.PlaceholderText = "Bitiş (örn: 9999)"
 EndTextBox.Text = ""
-EndTextBox.Parent = Frame
+EndTextBox.BorderSizePixel = 0
+local EndTextBoxCorner = Instance.new("UICorner")
+EndTextBoxCorner.CornerRadius = UDim.new(0, 8)
+EndTextBoxCorner.Parent = EndTextBox
+EndTextBox.Parent = JacklerContent
 
--- Zıpla butonu oluşturma
+-- Zıpla butonu
 local StartButton = Instance.new("TextButton")
-StartButton.Size = UDim2.new(0, 80, 0, 40)
-StartButton.Position = UDim2.new(0.3, -40, 0, 110)
-StartButton.BackgroundColor3 = Color3.fromRGB(0, 120, 215)
+StartButton.Size = UDim2.new(0, 200, 0, 40) -- Genişlik 200 piksele çıkarıldı (400/2)
+StartButton.Position = UDim2.new(0, 20, 0, 130) -- x = 40
+StartButton.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
 StartButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 StartButton.Text = "Zıpla!"
-StartButton.Parent = Frame
+StartButton.BorderSizePixel = 0
+local StartButtonCorner = Instance.new("UICorner")
+StartButtonCorner.CornerRadius = UDim.new(0, 8)
+StartButtonCorner.Parent = StartButton
+StartButton.Parent = JacklerContent
 
--- Durdur/Devam Et butonu oluşturma
+-- Durdur/Devam Et butonu
 local PauseButton = Instance.new("TextButton")
-PauseButton.Size = UDim2.new(0, 80, 0, 40)
-PauseButton.Position = UDim2.new(0.7, -40, 0, 110)
-PauseButton.BackgroundColor3 = Color3.fromRGB(215, 120, 0)
+PauseButton.Size = UDim2.new(0, 200, 0, 40) -- Genişlik 200 piksele çıkarıldı (400/2)
+PauseButton.Position = UDim2.new(0, 240, 0, 130) -- x = 40 + 200 (Zıpla butonunun hemen sağı)
+PauseButton.BackgroundColor3 = Color3.fromRGB(200, 120, 50)
 PauseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 PauseButton.Text = "Durdur"
-PauseButton.Parent = Frame
+PauseButton.BorderSizePixel = 0
+local PauseButtonCorner = Instance.new("UICorner")
+PauseButtonCorner.CornerRadius = UDim.new(0, 8)
+PauseButtonCorner.Parent = PauseButton
+PauseButton.Parent = JacklerContent
 
--- JJ/GJ/HJ Mod butonu oluşturma (boydan boya)
+-- JJ/GJ/HJ Mod butonu
 local ModeButton = Instance.new("TextButton")
-ModeButton.Size = UDim2.new(0, 180, 0, 40)
-ModeButton.Position = UDim2.new(0.5, -90, 0, 170)
-ModeButton.BackgroundColor3 = Color3.fromRGB(0, 215, 120)
+ModeButton.Size = UDim2.new(0, 420, 0, 40) -- Genişlik 400 piksele çıkarıldı
+ModeButton.Position = UDim2.new(0, 20, 0, 190) -- x = 40, sağa hizalı olacak
+ModeButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
 ModeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-ModeButton.Text = "JJ" -- Varsayılan olarak Jumper Jack
-ModeButton.Parent = Frame
+ModeButton.Text = "JJ"
+ModeButton.BorderSizePixel = 0
+local ModeButtonCorner = Instance.new("UICorner")
+ModeButtonCorner.CornerRadius = UDim.new(0, 8)
+ModeButtonCorner.Parent = ModeButton
+ModeButton.Parent = JacklerContent
 
--- Turbo Modu butonu oluşturma (JJ-GJ-HJ’nin altına)
+-- Turbo Modu butonu
 local TurboButton = Instance.new("TextButton")
-TurboButton.Size = UDim2.new(0, 180, 0, 40)
-TurboButton.Position = UDim2.new(0.5, -90, 0, 220)
+TurboButton.Size = UDim2.new(0, 420, 0, 40) -- Genişlik 400 piksele çıkarıldı
+TurboButton.Position = UDim2.new(0, 20, 0, 240) -- x = 40, sağa hizalı olacak
 TurboButton.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
 TurboButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-TurboButton.Text = "Turbo Kapalı" -- Varsayılan olarak kapalı
-TurboButton.Parent = Frame
+TurboButton.Text = "Turbo Kapalı"
+TurboButton.BorderSizePixel = 0
+local TurboButtonCorner = Instance.new("UICorner")
+TurboButtonCorner.CornerRadius = UDim.new(0, 8)
+TurboButtonCorner.Parent = TurboButton
+TurboButton.Parent = JacklerContent
+
+-- Sekme içerik çerçeveleri
+local tabContents = {}
+for _, tabName in ipairs(tabs) do
+    local content = Instance.new("Frame")
+    content.Size = UDim2.new(1, 0, 1, 0)
+    content.Position = UDim2.new(0, 0, 0, 0)
+    content.BackgroundTransparency = 1
+    content.Visible = false
+    content.Parent = ContentFrame
+    tabContents[tabName] = content
+end
+
+-- Jackler sekmesi içeriğini bağla
+JacklerContent.Visible = false
+tabContents["Jackler"] = JacklerContent
+
+-- Sekme değiştirme mantığı
+local function switchTab(tabName)
+    for name, button in pairs(tabButtons) do
+        if name == tabName then
+            button.BackgroundColor3 = Color3.fromRGB(70, 70, 70) -- Seçili sekme koyu gri
+        else
+            button.BackgroundColor3 = Color3.fromRGB(50, 50, 50) -- Diğer sekmeler açık gri
+        end
+    end
+    for name, content in pairs(tabContents) do
+        content.Visible = (name == tabName)
+    end
+    currentTab = tabName
+end
+
+-- Sekme butonlarına tıklama olayları
+for tabName, button in pairs(tabButtons) do
+    button.MouseButton1Click:Connect(function()
+        switchTab(tabName)
+    end)
+end
+
+-- Varsayılan olarak Giriş sekmesini aç
+switchTab("Giriş")
 
 -- Türkçe karakterler için büyükten küçüğe dönüşüm tablosu
 local turkishLowerMap = {
     ["Ç"] = "ç", ["Ğ"] = "ğ", ["İ"] = "i", ["Ö"] = "ö", ["Ş"] = "ş", ["Ü"] = "ü",
     ["A"] = "a", ["B"] = "b", ["C"] = "c", ["D"] = "d", ["E"] = "e", ["F"] = "f",
-    ["G"] = "g", ["H"] = "h", ["I"] = "ı", ["J"] = "j", ["K"] = "k", ["L"] = "l",
+    ["G"] = "g", ["H"] = "h", ["I"] = "ı", ["J"] = "j", ["K"] = "k", ["L"] = "l", -- Virgül eklendi
     ["M"] = "m", ["N"] = "n", ["O"] = "o", ["P"] = "p", ["R"] = "r", ["S"] = "s",
     ["T"] = "t", ["U"] = "u", ["V"] = "v", ["Y"] = "y", ["Z"] = "z"
 }
@@ -243,15 +375,15 @@ TurboButton.MouseButton1Click:Connect(function()
     if isTurbo then
         isTurbo = false
         TurboButton.Text = "Turbo Kapalı"
-        TurboButton.BackgroundColor3 = Color3.fromRGB(255, 50, 50) -- Kırmızı (kapalı)
+        TurboButton.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
     else
         isTurbo = true
         TurboButton.Text = "Turbo Açık"
-        TurboButton.BackgroundColor3 = Color3.fromRGB(50, 255, 50) -- Yeşil (açık)
+        TurboButton.BackgroundColor3 = Color3.fromRGB(50, 255, 50)
     end
 end)
 
--- Mesaj gönderme fonksiyonu (HJ’de turbo etkisiz)
+-- Mesaj gönderme fonksiyonu (Turbo 0.75 katına indiriyor, HJ’de etkisiz)
 local function sendChatMessage(message)
     local charCount = utf8.len(message)
     local waitTime
@@ -260,10 +392,10 @@ local function sendChatMessage(message)
     else
         waitTime = 1.3 + (charCount * 0.05) -- Birden fazla harf için 1.3 + harf başına 0.05 saniye
     end
-    if isTurbo and currentMode ~= "HJ" then -- Turbo sadece HJ değilse etkili
-        waitTime = waitTime / 2 -- Turbo modunda süre yarısına düşer
+    if isTurbo and currentMode ~= "HJ" then
+        waitTime = waitTime * 0.75
     end
-    wait(waitTime) -- Mesajdan önce bekle
+    wait(waitTime)
     
     if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
         local textChannels = TextChatService:WaitForChild("TextChannels", 5)
@@ -291,19 +423,22 @@ local isRunning = false
 local currentIndex = 1
 local startNumber = 1
 local targetNumber = 0
-local currentMode = "JJ" -- Varsayılan mod: Jumper Jack
+local currentMode = "JJ"
 
 -- JJ/GJ/HJ Mod değiştirme mantığı
 ModeButton.MouseButton1Click:Connect(function()
     if currentMode == "JJ" then
         currentMode = "GJ"
         ModeButton.Text = "GJ"
+        ModeButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
     elseif currentMode == "GJ" then
         currentMode = "HJ"
         ModeButton.Text = "HJ"
+        ModeButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
     else
         currentMode = "JJ"
         ModeButton.Text = "JJ"
+        ModeButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
     end
 end)
 
@@ -313,7 +448,6 @@ PauseButton.MouseButton1Click:Connect(function()
         if isPaused then
             isPaused = false
             PauseButton.Text = "Durdur"
-            -- Kaldığı yerden devam et
             while currentIndex <= targetNumber do
                 if isPaused then break end
                 local message = numberToText(currentIndex, currentMode)
@@ -347,8 +481,8 @@ end)
 
 -- Zıpla butonu mantığı
 StartButton.MouseButton1Click:Connect(function()
-    local endInput = tonumber(EndTextBox.Text) or 9999 -- Bitiş girilmezse 9999
-    local startInput = tonumber(StartTextBox.Text) or 1 -- Opsiyonel, girilmezse 1
+    local endInput = tonumber(EndTextBox.Text) or 9999
+    local startInput = tonumber(StartTextBox.Text) or 1
     
     if endInput > 0 then
         if startInput > endInput then
@@ -364,7 +498,6 @@ StartButton.MouseButton1Click:Connect(function()
             return
         end
         
-        -- Mevcut işlemi sıfırla ve baştan başla
         isRunning = true
         isPaused = false
         startNumber = startInput
@@ -401,12 +534,3 @@ StartButton.MouseButton1Click:Connect(function()
         EndTextBox.Text = ""
     end
 end)
-
--- GUI'nin üstünde bir başlık ekleyelim
-local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(0, 200, 0, 20)
-Title.Position = UDim2.new(0, 0, 0, 0)
-Title.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.Text = "Jumper Jack"
-Title.Parent = Frame
