@@ -215,6 +215,529 @@ end
 -- Jackler sekmesi içeriğini bağla
 JacklerContent.Visible = false
 tabContents["Jackler"] = JacklerContent
+-- Karakter sekmesi için içerik
+local CharacterContent = Instance.new("Frame")
+CharacterContent.Size = UDim2.new(1, 0, 1, 0)
+CharacterContent.Position = UDim2.new(0, 0, 0, 0)
+CharacterContent.BackgroundTransparency = 1
+CharacterContent.Visible = false
+CharacterContent.Parent = ContentFrame
+
+-- Walkspeed Yazısı
+local WalkspeedLabel = Instance.new("TextLabel")
+WalkspeedLabel.Size = UDim2.new(0, 200, 0, 30)
+WalkspeedLabel.Position = UDim2.new(0, 40, 0, 40)
+WalkspeedLabel.BackgroundTransparency = 1
+WalkspeedLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+WalkspeedLabel.Text = "Walkspeed: 16"
+WalkspeedLabel.TextSize = 18
+WalkspeedLabel.Parent = CharacterContent
+
+-- Walkspeed Slider
+local WalkspeedSliderFrame = Instance.new("Frame")
+WalkspeedSliderFrame.Size = UDim2.new(0, 360, 0, 10)
+WalkspeedSliderFrame.Position = UDim2.new(0, 40, 0, 80)
+WalkspeedSliderFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+WalkspeedSliderFrame.BorderSizePixel = 0
+local WalkspeedSliderCorner = Instance.new("UICorner")
+WalkspeedSliderCorner.CornerRadius = UDim.new(0, 5)
+WalkspeedSliderCorner.Parent = WalkspeedSliderFrame
+WalkspeedSliderFrame.Parent = CharacterContent
+
+local WalkspeedSliderKnob = Instance.new("TextButton")
+WalkspeedSliderKnob.Size = UDim2.new(0, 20, 0, 20)
+WalkspeedSliderKnob.Position = UDim2.new(0, 0, -0.5, 0)
+WalkspeedSliderKnob.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+WalkspeedSliderKnob.Text = ""
+WalkspeedSliderKnob.BorderSizePixel = 0
+local WalkspeedKnobCorner = Instance.new("UICorner")
+WalkspeedKnobCorner.CornerRadius = UDim.new(0, 10)
+WalkspeedKnobCorner.Parent = WalkspeedSliderKnob
+WalkspeedSliderKnob.Parent = WalkspeedSliderFrame
+
+-- Jumppower Yazısı
+local JumppowerLabel = Instance.new("TextLabel")
+JumppowerLabel.Size = UDim2.new(0, 200, 0, 30)
+JumppowerLabel.Position = UDim2.new(0, 40, 0, 120)
+JumppowerLabel.BackgroundTransparency = 1
+JumppowerLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+JumppowerLabel.Text = "Jumppower: 20"
+JumppowerLabel.TextSize = 18
+JumppowerLabel.Parent = CharacterContent
+
+-- Jumppower Slider
+local JumppowerSliderFrame = Instance.new("Frame")
+JumppowerSliderFrame.Size = UDim2.new(0, 360, 0, 10)
+JumppowerSliderFrame.Position = UDim2.new(0, 40, 0, 160)
+JumppowerSliderFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+JumppowerSliderFrame.BorderSizePixel = 0
+local JumppowerSliderCorner = Instance.new("UICorner")
+JumppowerSliderCorner.CornerRadius = UDim.new(0, 5)
+JumppowerSliderCorner.Parent = JumppowerSliderFrame
+JumppowerSliderFrame.Parent = CharacterContent
+
+local JumppowerSliderKnob = Instance.new("TextButton")
+JumppowerSliderKnob.Size = UDim2.new(0, 20, 0, 20)
+JumppowerSliderKnob.Position = UDim2.new(0, 0, -0.5, 0)
+JumppowerSliderKnob.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+JumppowerSliderKnob.Text = ""
+JumppowerSliderKnob.BorderSizePixel = 0
+local JumppowerKnobCorner = Instance.new("UICorner")
+JumppowerKnobCorner.CornerRadius = UDim.new(0, 10)
+JumppowerKnobCorner.Parent = JumppowerSliderKnob
+JumppowerSliderKnob.Parent = JumppowerSliderFrame
+
+-- Karakter sekmesini tabContents'e bağla
+tabContents["Karakter"] = CharacterContent
+-- Giriş sekmesi için içerik
+local IntroContent = Instance.new("Frame")
+IntroContent.Size = UDim2.new(1, 0, 1, 0)
+IntroContent.Position = UDim2.new(0, 0, 0, 0)
+IntroContent.BackgroundTransparency = 1
+IntroContent.Visible = false
+IntroContent.Parent = ContentFrame
+
+-- Büyük başlık yazısı (Header)
+local HeaderLabel = Instance.new("TextLabel")
+HeaderLabel.Size = UDim2.new(0, 400, 0, 50)
+HeaderLabel.Position = UDim2.new(0, 40, 0, 100)
+HeaderLabel.BackgroundTransparency = 1
+HeaderLabel.TextColor3 = Color3.fromRGB(255, 255, 255) -- Beyaz renk
+HeaderLabel.Text = "Hoş Geldiniz!"
+HeaderLabel.TextSize = 36 -- Büyük yazı boyutu
+HeaderLabel.TextWrapped = true -- Metin taşarsa satır atlar
+HeaderLabel.Parent = IntroContent
+
+-- İlk küçük yazı
+local SubText1 = Instance.new("TextLabel")
+SubText1.Size = UDim2.new(0, 400, 0, 30)
+SubText1.Position = UDim2.new(0, 40, 0, 160)
+SubText1.BackgroundTransparency = 1
+SubText1.TextColor3 = Color3.fromRGB(150, 150, 150) -- Gri ton
+SubText1.Text = "grimmng private"
+SubText1.TextSize = 18 -- Daha küçük yazı boyutu
+SubText1.TextWrapped = true
+SubText1.Parent = IntroContent
+
+-- İkinci küçük yazı
+local SubText2 = Instance.new("TextLabel")
+SubText2.Size = UDim2.new(0, 400, 0, 30)
+SubText2.Position = UDim2.new(0, 40, 0, 190)
+SubText2.BackgroundTransparency = 1
+SubText2.TextColor3 = Color3.fromRGB(150, 150, 150) -- Gri ton
+SubText2.Text = "v1.0.0"
+SubText2.TextSize = 18 -- Daha küçük yazı boyutu
+SubText2.TextWrapped = true
+SubText2.Parent = IntroContent
+
+-- Giriş sekmesini tabContents'e bağla
+tabContents["Giriş"] = IntroContent
+-- Görüş sekmesi için içerik
+local ViewContent = Instance.new("Frame")
+ViewContent.Size = UDim2.new(1, 0, 1, 0)
+ViewContent.Position = UDim2.new(0, 0, 0, 0)
+ViewContent.BackgroundTransparency = 1
+ViewContent.Visible = false
+ViewContent.Parent = ContentFrame
+
+-- ESP Toggle Butonu
+local ESPToggleButton = Instance.new("TextButton")
+ESPToggleButton.Size = UDim2.new(0, 350, 0, 40)
+ESPToggleButton.Position = UDim2.new(0, 40, 0, 40)
+ESPToggleButton.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
+ESPToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ESPToggleButton.Text = "ESP Aç"
+ESPToggleButton.TextSize = 18
+ESPToggleButton.BorderSizePixel = 0
+local ESPToggleButtonCorner = Instance.new("UICorner")
+ESPToggleButtonCorner.CornerRadius = UDim.new(0, 8)
+ESPToggleButtonCorner.Parent = ESPToggleButton
+ESPToggleButton.Parent = ViewContent
+
+-- Takım Renklerini Kullan Butonu
+local TeamColorToggleButton = Instance.new("TextButton")
+TeamColorToggleButton.Size = UDim2.new(0, 350, 0, 40)
+TeamColorToggleButton.Position = UDim2.new(0, 40, 0, 90)
+TeamColorToggleButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+TeamColorToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+TeamColorToggleButton.Text = "Takım Renklerini Kullan"
+TeamColorToggleButton.TextSize = 18
+TeamColorToggleButton.BorderSizePixel = 0
+local TeamColorToggleButtonCorner = Instance.new("UICorner")
+TeamColorToggleButtonCorner.CornerRadius = UDim.new(0, 8)
+TeamColorToggleButtonCorner.Parent = TeamColorToggleButton
+TeamColorToggleButton.Parent = ViewContent
+
+-- Renk Slider'ları için bir Frame (R, G, B için ayrı slider'lar)
+local ColorSliderFrame = Instance.new("Frame")
+ColorSliderFrame.Size = UDim2.new(0, 400, 0, 120)
+ColorSliderFrame.Position = UDim2.new(0, 40, 0, 140) -- Takım renkleri butonunun altına kaydırıldı
+ColorSliderFrame.BackgroundTransparency = 1
+ColorSliderFrame.Parent = ViewContent
+
+-- Kırmızı (R) Slider
+local RLabel = Instance.new("TextLabel")
+RLabel.Size = UDim2.new(0, 400, 0, 20)
+RLabel.Position = UDim2.new(0, -20, 0, 0)
+RLabel.BackgroundTransparency = 1
+RLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+RLabel.Text = "Kırmızı: 255"
+RLabel.TextSize = 16
+RLabel.Parent = ColorSliderFrame
+
+local RSliderFrame = Instance.new("Frame")
+RSliderFrame.Size = UDim2.new(0, 350, 0, 10)
+RSliderFrame.Position = UDim2.new(0, 0, 0, 20)
+RSliderFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+RSliderFrame.BorderSizePixel = 0
+local RSliderCorner = Instance.new("UICorner")
+RSliderCorner.CornerRadius = UDim.new(0, 5)
+RSliderCorner.Parent = RSliderFrame
+RSliderFrame.Parent = ColorSliderFrame
+
+local RSliderKnob = Instance.new("TextButton")
+RSliderKnob.Size = UDim2.new(0, 20, 0, 20)
+RSliderKnob.Position = UDim2.new(1, -20, -0.5, 0) -- Başlangıçta en sağda (255)
+RSliderKnob.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+RSliderKnob.Text = ""
+RSliderKnob.BorderSizePixel = 0
+local RKnobCorner = Instance.new("UICorner")
+RKnobCorner.CornerRadius = UDim.new(0, 10)
+RKnobCorner.Parent = RSliderKnob
+RSliderKnob.Parent = RSliderFrame
+
+-- Yeşil (G) Slider
+local GLabel = Instance.new("TextLabel")
+GLabel.Size = UDim2.new(0, 400, 0, 20)
+GLabel.Position = UDim2.new(0, -20, 0, 40)
+GLabel.BackgroundTransparency = 1
+GLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+GLabel.Text = "Yeşil: 255"
+GLabel.TextSize = 16
+GLabel.Parent = ColorSliderFrame
+
+local GSliderFrame = Instance.new("Frame")
+GSliderFrame.Size = UDim2.new(0, 350, 0, 10)
+GSliderFrame.Position = UDim2.new(0, 0, 0, 60)
+GSliderFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+GSliderFrame.BorderSizePixel = 0
+local GSliderCorner = Instance.new("UICorner")
+GSliderCorner.CornerRadius = UDim.new(0, 5)
+GSliderCorner.Parent = GSliderFrame
+GSliderFrame.Parent = ColorSliderFrame
+
+local GSliderKnob = Instance.new("TextButton")
+GSliderKnob.Size = UDim2.new(0, 20, 0, 20)
+GSliderKnob.Position = UDim2.new(1, -20, -0.5, 0) -- Başlangıçta en sağda (255)
+GSliderKnob.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+GSliderKnob.Text = ""
+GSliderKnob.BorderSizePixel = 0
+local GKnobCorner = Instance.new("UICorner")
+GKnobCorner.CornerRadius = UDim.new(0, 10)
+GKnobCorner.Parent = GSliderKnob
+GSliderKnob.Parent = GSliderFrame
+
+-- Mavi (B) Slider
+local BLabel = Instance.new("TextLabel")
+BLabel.Size = UDim2.new(0, 400, 0, 20)
+BLabel.Position = UDim2.new(0, -20, 0, 80)
+BLabel.BackgroundTransparency = 1
+BLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+BLabel.Text = "Mavi: 255"
+BLabel.TextSize = 16
+BLabel.Parent = ColorSliderFrame
+
+local BSliderFrame = Instance.new("Frame")
+BSliderFrame.Size = UDim2.new(0, 350, 0, 10)
+BSliderFrame.Position = UDim2.new(0, 0, 0, 100)
+BSliderFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+BSliderFrame.BorderSizePixel = 0
+local BSliderCorner = Instance.new("UICorner")
+BSliderCorner.CornerRadius = UDim.new(0, 5)
+BSliderCorner.Parent = BSliderFrame
+BSliderFrame.Parent = ColorSliderFrame
+
+local BSliderKnob = Instance.new("TextButton")
+BSliderKnob.Size = UDim2.new(0, 20, 0, 20)
+BSliderKnob.Position = UDim2.new(1, -20, -0.5, 0) -- Başlangıçta en sağda (255)
+BSliderKnob.BackgroundColor3 = Color3.fromRGB(0, 0, 255)
+BSliderKnob.Text = ""
+BSliderKnob.BorderSizePixel = 0
+local BKnobCorner = Instance.new("UICorner")
+BKnobCorner.CornerRadius = UDim.new(0, 10)
+BKnobCorner.Parent = BSliderKnob
+BSliderKnob.Parent = BSliderFrame
+
+-- Görüş sekmesini tabContents'e bağla
+tabContents["Görüş"] = ViewContent
+
+-- ESP Mantığı
+local ESPEnabled = false
+local ESPHighlights = {} -- Oyuncuların Highlight nesnelerini saklamak için tablo
+local ESPNames = {} -- Oyuncuların isimlerini saklamak için tablo
+local ESPColor = Color3.fromRGB(255, 255, 255) -- Varsayılan renk (beyaz)
+local UseTeamColors = false -- Takım renklerini kullanma durumu
+
+-- Slider mantığı (R, G, B için)
+local function createColorSlider(sliderKnob, sliderFrame, label, colorComponent)
+    local dragging = false
+    local sliderWidth = sliderFrame.AbsoluteSize.X - sliderKnob.AbsoluteSize.X
+
+    sliderKnob.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+        end
+    end)
+
+    sliderKnob.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
+        end
+    end)
+
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            local mousePos = input.Position.X
+            local framePos = sliderFrame.AbsolutePosition.X
+            local relativePos = math.clamp((mousePos - framePos), 0, sliderWidth)
+            local ratio = relativePos / sliderWidth
+            sliderKnob.Position = UDim2.new(ratio, 0, -0.5, 0)
+
+            -- Değeri hesapla (0-255 arası)
+            local value = math.floor(ratio * 255 + 0.5)
+            label.Text = colorComponent .. ": " .. value
+
+            -- ESP rengini güncelle
+            if colorComponent == "Kırmızı" then
+                ESPColor = Color3.fromRGB(value, ESPColor.G * 255, ESPColor.B * 255)
+            elseif colorComponent == "Yeşil" then
+                ESPColor = Color3.fromRGB(ESPColor.R * 255, value, ESPColor.B * 255)
+            elseif colorComponent == "Mavi" then
+                ESPColor = Color3.fromRGB(ESPColor.R * 255, ESPColor.G * 255, value)
+            end
+
+            -- ESP açıkken ve takım renkleri kullanılmıyorken renkleri güncelle
+            if ESPEnabled and not UseTeamColors then
+                for _, highlight in pairs(ESPHighlights) do
+                    highlight.FillColor = ESPColor
+                    highlight.OutlineColor = ESPColor
+                end
+            end
+        end
+    end)
+end
+
+-- Slider'ları başlat
+createColorSlider(RSliderKnob, RSliderFrame, RLabel, "Kırmızı")
+createColorSlider(GSliderKnob, GSliderFrame, GLabel, "Yeşil")
+createColorSlider(BSliderKnob, BSliderFrame, BLabel, "Mavi")
+
+-- ESP renklerini güncelleyen yardımcı fonksiyon
+local function updateESPColors()
+    if ESPEnabled then
+        for otherPlayer, highlight in pairs(ESPHighlights) do
+            if UseTeamColors and otherPlayer.Team then
+                highlight.FillColor = otherPlayer.TeamColor.Color
+                highlight.OutlineColor = otherPlayer.TeamColor.Color
+            else
+                highlight.FillColor = ESPColor
+                highlight.OutlineColor = ESPColor
+            end
+        end
+    end
+end
+
+-- Takım renklerini açıp kapatma fonksiyonu
+local function toggleTeamColors()
+    UseTeamColors = not UseTeamColors
+    TeamColorToggleButton.Text = UseTeamColors and "Takım Renklerini Kapat" or "Takım Renklerini Kullan"
+    updateESPColors()
+end
+
+-- ESP'yi açıp kapatma fonksiyonu
+local function toggleESP()
+    ESPEnabled = not ESPEnabled
+    ESPToggleButton.Text = ESPEnabled and "ESP Kapat" or "ESP Aç"
+
+    if ESPEnabled then
+        -- Tüm oyuncular için ESP'yi etkinleştir
+        for _, otherPlayer in pairs(game.Players:GetPlayers()) do
+            if otherPlayer ~= player and otherPlayer.Character then
+                local character = otherPlayer.Character
+                local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+                if humanoidRootPart then
+                    -- Highlight oluştur
+                    local highlight = Instance.new("Highlight")
+                    highlight.Adornee = character
+                    if UseTeamColors and otherPlayer.Team then
+                        highlight.FillColor = otherPlayer.TeamColor.Color
+                        highlight.OutlineColor = otherPlayer.TeamColor.Color
+                    else
+                        highlight.FillColor = ESPColor
+                        highlight.OutlineColor = ESPColor
+                    end
+                    highlight.FillTransparency = 0.5
+                    highlight.OutlineTransparency = 0
+                    highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop -- Duvarların arkasından görünür
+                    highlight.Parent = character
+                    ESPHighlights[otherPlayer] = highlight
+
+                    -- İsim için BillboardGui oluştur
+                    local billboardGui = Instance.new("BillboardGui")
+                    billboardGui.Size = UDim2.new(0, 100, 0, 50)
+                    billboardGui.StudsOffset = Vector3.new(0, 3, 0) -- Başın üstünde
+                    billboardGui.AlwaysOnTop = true -- Duvarların arkasından görünür
+                    billboardGui.Adornee = humanoidRootPart
+                    billboardGui.Parent = character
+
+                    local nameLabel = Instance.new("TextLabel")
+                    nameLabel.Size = UDim2.new(1, 0, 1, 0)
+                    nameLabel.BackgroundTransparency = 1
+                    nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+                    nameLabel.TextStrokeTransparency = 0
+                    nameLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+                    nameLabel.TextScaled = true
+                    nameLabel.Text = otherPlayer.Name
+                    nameLabel.Parent = billboardGui
+                    ESPNames[otherPlayer] = billboardGui
+                end
+            end
+        end
+    else
+        -- ESP'yi kapat, tüm Highlight ve BillboardGui'leri kaldır
+        for player, highlight in pairs(ESPHighlights) do
+            highlight:Destroy()
+        end
+        for player, billboardGui in pairs(ESPNames) do
+            billboardGui:Destroy()
+        end
+        ESPHighlights = {}
+        ESPNames = {}
+    end
+end
+
+-- Toggle butonlarına tıklama olayları
+ESPToggleButton.MouseButton1Click:Connect(toggleESP)
+TeamColorToggleButton.MouseButton1Click:Connect(toggleTeamColors)
+
+-- Yeni oyuncular için ESP'yi güncelle
+game.Players.PlayerAdded:Connect(function(newPlayer)
+    if ESPEnabled and newPlayer ~= player then
+        newPlayer.CharacterAdded:Connect(function(character)
+            local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+            if humanoidRootPart then
+                -- Highlight oluştur
+                local highlight = Instance.new("Highlight")
+                highlight.Adornee = character
+                if UseTeamColors and newPlayer.Team then
+                    highlight.FillColor = newPlayer.TeamColor.Color
+                    highlight.OutlineColor = newPlayer.TeamColor.Color
+                else
+                    highlight.FillColor = ESPColor
+                    highlight.OutlineColor = ESPColor
+                end
+                highlight.FillTransparency = 0.5
+                highlight.OutlineTransparency = 0
+                highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+                highlight.Parent = character
+                ESPHighlights[newPlayer] = highlight
+
+                -- İsim için BillboardGui oluştur
+                local billboardGui = Instance.new("BillboardGui")
+                billboardGui.Size = UDim2.new(0, 100, 0, 50)
+                billboardGui.StudsOffset = Vector3.new(0, 3, 0)
+                billboardGui.AlwaysOnTop = true
+                billboardGui.Adornee = humanoidRootPart
+                billboardGui.Parent = character
+
+                local nameLabel = Instance.new("TextLabel")
+                nameLabel.Size = UDim2.new(1, 0, 1, 0)
+                nameLabel.BackgroundTransparency = 1
+                nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+                nameLabel.TextStrokeTransparency = 0
+                nameLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+                nameLabel.TextScaled = true
+                nameLabel.Text = newPlayer.Name
+                nameLabel.Parent = billboardGui
+                ESPNames[newPlayer] = billboardGui
+            end
+        end)
+    end
+end)
+
+-- Oyuncu ayrıldığında ESP'yi temizle
+game.Players.PlayerRemoving:Connect(function(leavingPlayer)
+    if ESPHighlights[leavingPlayer] then
+        ESPHighlights[leavingPlayer]:Destroy()
+        ESPHighlights[leavingPlayer] = nil
+    end
+    if ESPNames[leavingPlayer] then
+        ESPNames[leavingPlayer]:Destroy()
+        ESPNames[leavingPlayer] = nil
+    end
+end)
+
+-- Oyuncunun takımı değiştiğinde ESP rengini güncelle
+game.Players.PlayerAdded:Connect(function(newPlayer)
+    newPlayer:GetPropertyChangedSignal("Team"):Connect(function()
+        if ESPEnabled and UseTeamColors and ESPHighlights[newPlayer] then
+            local highlight = ESPHighlights[newPlayer]
+            if newPlayer.Team then
+                highlight.FillColor = newPlayer.TeamColor.Color
+                highlight.OutlineColor = newPlayer.TeamColor.Color
+            else
+                highlight.FillColor = ESPColor
+                highlight.OutlineColor = ESPColor
+            end
+        end
+    end)
+end)
+
+-- Slider sürükleme mantığı
+local function createSlider(sliderKnob, sliderFrame, minValue, maxValue, label, property)
+    local dragging = false
+    local sliderWidth = sliderFrame.AbsoluteSize.X - sliderKnob.AbsoluteSize.X
+
+    sliderKnob.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+        end
+    end)
+
+    sliderKnob.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
+        end
+    end)
+
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            local mousePos = input.Position.X
+            local framePos = sliderFrame.AbsolutePosition.X
+            local relativePos = math.clamp((mousePos - framePos), 0, sliderWidth)
+            local ratio = relativePos / sliderWidth
+            sliderKnob.Position = UDim2.new(ratio, 0, -0.5, 0)
+
+            -- Değeri hesapla
+            local value = minValue + (maxValue - minValue) * ratio
+            value = math.floor(value + 0.5) -- Yuvarla
+            label.Text = property .. ": " .. value
+
+            -- Karakterin özelliğini güncelle
+            if humanoid then
+                if property == "Walkspeed" then
+                    humanoid.WalkSpeed = value
+                elseif property == "Jumppower" then
+                    humanoid.JumpPower = value
+                end
+            end
+        end
+    end)
+end
+
+-- Slider'ları başlat
+createSlider(WalkspeedSliderKnob, WalkspeedSliderFrame, 16, 50, WalkspeedLabel, "Walkspeed")
+createSlider(JumppowerSliderKnob, JumppowerSliderFrame, 20, 100, JumppowerLabel, "Jumppower")
 
 -- Sekme değiştirme mantığı
 local function switchTab(tabName)
@@ -379,7 +902,7 @@ TurboButton.MouseButton1Click:Connect(function()
     else
         isTurbo = true
         TurboButton.Text = "Turbo Açık"
-        TurboButton.BackgroundColor3 = Color3.fromRGB(50, 255, 50)
+        TurboButton.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
     end
 end)
 
