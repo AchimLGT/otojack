@@ -8,8 +8,108 @@ local TextChatService = game:GetService("TextChatService")
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Parent = player:WaitForChild("PlayerGui")
 ScreenGui.Name = "GrimmngGui"
+ScreenGui.ResetOnSpawn = false -- Karakter yeniden doğduğunda GUI sıfırlanmasın
+
+-- Oyunun Player ve Character objelerine erişim için gerekli değişkenler
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local TextChatService = game:GetService("TextChatService")
+
+-- GUI oluşturma
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = player:WaitForChild("PlayerGui")
+ScreenGui.Name = "GrimmngGui"
+ScreenGui.ResetOnSpawn = false
+
+-- Karakter yeniden doğduğunda GUI'nin kaybolmasını önle
+player.CharacterAdded:Connect(function(newCharacter)
+    character = newCharacter
+    humanoid = newCharacter:WaitForChild("Humanoid")
+    if not ScreenGui.Parent then
+        ScreenGui.Parent = player:WaitForChild("PlayerGui")
+    end
+end)
 
 -- Ana çerçeve (Frame) oluşturma
+local Frame = Instance.new("Frame")
+Frame.Size = UDim2.new(0, 600, 0, 400)
+Frame.Position = UDim2.new(0.5, -300, 0.5, -200)
+Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+Frame.BorderSizePixel = 0
+Frame.ClipsDescendants = true
+local FrameCorner = Instance.new("UICorner")
+FrameCorner.CornerRadius = UDim.new(0, 10)
+FrameCorner.Parent = Frame
+Frame.Parent = ScreenGui
+
+-- Sürükleme için yardımcı değişkenler
+local dragging = false
+local dragInput, dragStart, startPos
+
+Frame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = Frame.Position
+    end
+end)
+
+Frame.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
+    end
+end)
+
+Frame.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = false
+        dragInput = nil
+    end
+end)
+
+game:GetService("RunService").RenderStepped:Connect(function()
+    if dragging and dragInput then
+        local delta = dragInput.Position - dragStart
+        Frame.Position = UDim2.new(
+            startPos.X.Scale,
+            startPos.X.Offset + delta.X,
+            startPos.Y.Scale,
+            startPos.Y.Offset + delta.Y
+        )
+    end
+end)
+
+-- Sağ Shift ile GUI açma/kapama
+local UserInputService = game:GetService("UserInputService")
+local guiVisible = true
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.KeyCode == Enum.KeyCode.RightShift then
+        guiVisible = not guiVisible
+        ScreenGui.Enabled = guiVisible
+        if guiVisible then
+            -- GUI açıldığında pozisyonu zorla güncelle
+            Frame.Position = Frame.Position -- Mevcut pozisyonu koru
+            Frame.BackgroundTransparency = 0
+            Frame.Visible = true -- Görünürlüğü garantile
+        end
+    end
+end)
+
+-- Karakter yeniden doğduğunda GUI'nin kaybolmasını önle
+player.CharacterAdded:Connect(function(newCharacter)
+    -- Yeni karakteri bekle ve humanoid'i güncelle
+    character = newCharacter
+    humanoid = newCharacter:WaitForChild("Humanoid")
+    -- GUI'nin PlayerGui içinde olduğundan emin ol
+    if not ScreenGui.Parent then
+        ScreenGui.Parent = player:WaitForChild("PlayerGui")
+    end
+end)
+
+-- Ana çerçeve (Frame) oluşturma (buradan sonrası değişmeden devam eder)
 local Frame = Instance.new("Frame")
 Frame.Size = UDim2.new(0, 600, 0, 400) -- Yatay dikdörtgen
 Frame.Position = UDim2.new(0.5, -300, 0.5, -200) -- Ortada
