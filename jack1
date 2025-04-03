@@ -11,8 +11,8 @@ ScreenGui.Name = "JumperJackGui"
 
 -- Ana çerçeve (Frame) oluşturma ve sürükleme özelliği ekleme
 local Frame = Instance.new("Frame")
-Frame.Size = UDim2.new(0, 200, 0, 220)
-Frame.Position = UDim2.new(0.5, -100, 0.5, -110)
+Frame.Size = UDim2.new(0, 200, 0, 300)
+Frame.Position = UDim2.new(0.5, -100, 0.5, -150)
 Frame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 Frame.BorderSizePixel = 0
 Frame.Parent = ScreenGui
@@ -75,8 +75,8 @@ EndTextBox.Parent = Frame
 
 -- Zıpla butonu oluşturma
 local StartButton = Instance.new("TextButton")
-StartButton.Size = UDim2.new(0, 60, 0, 40)
-StartButton.Position = UDim2.new(0.15, -30, 0, 110)
+StartButton.Size = UDim2.new(0, 80, 0, 40)
+StartButton.Position = UDim2.new(0.3, -40, 0, 110)
 StartButton.BackgroundColor3 = Color3.fromRGB(0, 120, 215)
 StartButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 StartButton.Text = "Zıpla!"
@@ -84,21 +84,30 @@ StartButton.Parent = Frame
 
 -- Durdur/Devam Et butonu oluşturma
 local PauseButton = Instance.new("TextButton")
-PauseButton.Size = UDim2.new(0, 60, 0, 40)
-PauseButton.Position = UDim2.new(0.5, -30, 0, 110)
+PauseButton.Size = UDim2.new(0, 80, 0, 40)
+PauseButton.Position = UDim2.new(0.7, -40, 0, 110)
 PauseButton.BackgroundColor3 = Color3.fromRGB(215, 120, 0)
 PauseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 PauseButton.Text = "Durdur"
 PauseButton.Parent = Frame
 
--- JJ/GJ Mod butonu oluşturma
+-- JJ/GJ/HJ Mod butonu oluşturma (boydan boya)
 local ModeButton = Instance.new("TextButton")
-ModeButton.Size = UDim2.new(0, 60, 0, 40)
-ModeButton.Position = UDim2.new(0.85, -30, 0, 110)
+ModeButton.Size = UDim2.new(0, 180, 0, 40)
+ModeButton.Position = UDim2.new(0.5, -90, 0, 170)
 ModeButton.BackgroundColor3 = Color3.fromRGB(0, 215, 120)
 ModeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 ModeButton.Text = "JJ" -- Varsayılan olarak Jumper Jack
 ModeButton.Parent = Frame
+
+-- Turbo Modu butonu oluşturma (JJ-GJ-HJ’nin altına)
+local TurboButton = Instance.new("TextButton")
+TurboButton.Size = UDim2.new(0, 180, 0, 40)
+TurboButton.Position = UDim2.new(0.5, -90, 0, 220)
+TurboButton.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+TurboButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+TurboButton.Text = "Turbo Kapalı" -- Varsayılan olarak kapalı
+TurboButton.Parent = Frame
 
 -- Türkçe karakterler için büyükten küçüğe dönüşüm tablosu
 local turkishLowerMap = {
@@ -140,7 +149,7 @@ local function capitalizeFirst(str)
 end
 
 -- Sayıları Türkçe olarak yazıya çevirme fonksiyonu (9999’a kadar destek)
-local function numberToText(num, isGramerJack)
+local function numberToText(num, mode)
     local birler = {"", "BİR", "İKİ", "ÜÇ", "DÖRT", "BEŞ", "ALTI", "YEDİ", "SEKİZ", "DOKUZ"}
     local onlar = {"", "ON", "YİRMİ", "OTUZ", "KIRK", "ELLİ", "ALTMIŞ", "YETMİŞ", "SEKSEN", "DOKSAN"}
     local yuzler = {"", "YÜZ", "İKİ YÜZ", "ÜÇ YÜZ", "DÖRT YÜZ", "BEŞ YÜZ", "ALTI YÜZ", "YEDİ YÜZ", "SEKİZ YÜZ", "DOKUZ YÜZ"}
@@ -151,85 +160,111 @@ local function numberToText(num, isGramerJack)
         return capitalizeFirst(lowered) .. "."
     end
     
-    if num == 0 then return isGramerJack and "Sıfır." or "SIFIR" end
-    if num <= 9 then return isGramerJack and formatGJ(birler[num + 1]) or birler[num + 1] end
-    if num <= 99 then
-        local on = math.floor(num / 10)
-        local bir = num % 10
-        if bir == 0 then
-            return isGramerJack and formatGJ(onlar[on + 1]) or onlar[on + 1]
-        else
-            local result = onlar[on + 1] .. " " .. birler[bir + 1]
-            return isGramerJack and formatGJ(result) or result
-        end
-    end
-    
-    if num <= 999 then
-        local yuz = math.floor(num / 100)
-        local kalan = num % 100
-        if kalan == 0 then
-            return isGramerJack and formatGJ(yuzler[yuz + 1]) or yuzler[yuz + 1]
-        elseif kalan <= 9 then
-            local result = yuzler[yuz + 1] .. " " .. birler[kalan + 1]
-            return isGramerJack and formatGJ(result) or result
-        else
-            local on = math.floor(kalan / 10)
-            local bir = kalan % 10
+    local function baseText(num)
+        if num == 0 then return "SIFIR" end
+        if num <= 9 then return birler[num + 1] end
+        if num <= 99 then
+            local on = math.floor(num / 10)
+            local bir = num % 10
             if bir == 0 then
-                local result = yuzler[yuz + 1] .. " " .. onlar[on + 1]
-                return isGramerJack and formatGJ(result) or result
+                return onlar[on + 1]
             else
-                local result = yuzler[yuz + 1] .. " " .. onlar[on + 1] .. " " .. birler[bir + 1]
-                return isGramerJack and formatGJ(result) or result
+                return onlar[on + 1] .. " " .. birler[bir + 1]
             end
         end
-    end
-    
-    if num <= 9999 then
-        local bin = math.floor(num / 1000)
-        local kalan = num % 1000
-        local binText = (bin == 1 and "BİN") or (birler[bin + 1] .. " BİN")
-        if kalan == 0 then
-            return isGramerJack and formatGJ(binText) or binText
-        elseif kalan <= 9 then
-            local result = binText .. " " .. birler[kalan + 1]
-            return isGramerJack and formatGJ(result) or result
-        elseif kalan <= 99 then
-            local on = math.floor(kalan / 10)
-            local bir = kalan % 10
-            if bir == 0 then
-                local result = binText .. " " .. onlar[on + 1]
-                return isGramerJack and formatGJ(result) or result
+        if num <= 999 then
+            local yuz = math.floor(num / 100)
+            local kalan = num % 100
+            if kalan == 0 then
+                return yuzler[yuz + 1]
+            elseif kalan <= 9 then
+                return yuzler[yuz + 1] .. " " .. birler[kalan + 1]
             else
-                local result = binText .. " " .. onlar[on + 1] .. " " .. birler[bir + 1]
-                return isGramerJack and formatGJ(result) or result
-            end
-        else
-            local yuz = math.floor(kalan / 100)
-            local kalan2 = kalan % 100
-            if kalan2 == 0 then
-                local result = binText .. " " .. yuzler[yuz + 1]
-                return isGramerJack and formatGJ(result) or result
-            elseif kalan2 <= 9 then
-                local result = binText .. " " .. yuzler[yuz + 1] .. " " .. birler[kalan2 + 1]
-                return isGramerJack and formatGJ(result) or result
-            else
-                local on = math.floor(kalan2 / 10)
-                local bir = kalan2 % 10
+                local on = math.floor(kalan / 10)
+                local bir = kalan % 10
                 if bir == 0 then
-                    local result = binText .. " " .. yuzler[yuz + 1] .. " " .. onlar[on + 1]
-                    return isGramerJack and formatGJ(result) or result
+                    return yuzler[yuz + 1] .. " " .. onlar[on + 1]
                 else
-                    local result = binText .. " " .. yuzler[yuz + 1] .. " " .. onlar[on + 1] .. " " .. birler[bir + 1]
-                    return isGramerJack and formatGJ(result) or result
+                    return yuzler[yuz + 1] .. " " .. onlar[on + 1] .. " " .. birler[bir + 1]
+                end
+            end
+        end
+        if num <= 9999 then
+            local bin = math.floor(num / 1000)
+            local kalan = num % 1000
+            local binText = (bin == 1 and "BİN") or (birler[bin + 1] .. " BİN")
+            if kalan == 0 then
+                return binText
+            elseif kalan <= 9 then
+                return binText .. " " .. birler[kalan + 1]
+            elseif kalan <= 99 then
+                local on = math.floor(kalan / 10)
+                local bir = kalan % 10
+                if bir == 0 then
+                    return binText .. " " .. onlar[on + 1]
+                else
+                    return binText .. " " .. onlar[on + 1] .. " " .. birler[bir + 1]
+                end
+            else
+                local yuz = math.floor(kalan / 100)
+                local kalan2 = kalan % 100
+                if kalan2 == 0 then
+                    return binText .. " " .. yuzler[yuz + 1]
+                elseif kalan2 <= 9 then
+                    return binText .. " " .. yuzler[yuz + 1] .. " " .. birler[kalan2 + 1]
+                else
+                    local on = math.floor(kalan2 / 10)
+                    local bir = kalan2 % 10
+                    if bir == 0 then
+                        return binText .. " " .. yuzler[yuz + 1] .. " " .. onlar[on + 1]
+                    else
+                        return binText .. " " .. yuzler[yuz + 1] .. " " .. onlar[on + 1] .. " " .. birler[bir + 1]
+                    end
                 end
             end
         end
     end
+    
+    local text = baseText(num)
+    if mode == "JJ" then
+        return text
+    elseif mode == "GJ" then
+        return formatGJ(text)
+    elseif mode == "HJ" then
+        return text -- HJ'de metni döndürüyoruz, ama harfleri ayrı işleyeceğiz
+    end
 end
 
--- Mesaj gönderme fonksiyonu
+-- Turbo durumu kontrol değişkeni
+local isTurbo = false
+
+-- Turbo Modu mantığı
+TurboButton.MouseButton1Click:Connect(function()
+    if isTurbo then
+        isTurbo = false
+        TurboButton.Text = "Turbo Kapalı"
+        TurboButton.BackgroundColor3 = Color3.fromRGB(255, 50, 50) -- Kırmızı (kapalı)
+    else
+        isTurbo = true
+        TurboButton.Text = "Turbo Açık"
+        TurboButton.BackgroundColor3 = Color3.fromRGB(50, 255, 50) -- Yeşil (açık)
+    end
+end)
+
+-- Mesaj gönderme fonksiyonu (HJ’de turbo etkisiz)
 local function sendChatMessage(message)
+    local charCount = utf8.len(message)
+    local waitTime
+    if charCount == 1 then
+        waitTime = 0.7 -- 1 harf için 0.7 saniye
+    else
+        waitTime = 1.3 + (charCount * 0.05) -- Birden fazla harf için 1.3 + harf başına 0.05 saniye
+    end
+    if isTurbo and currentMode ~= "HJ" then -- Turbo sadece HJ değilse etkili
+        waitTime = waitTime / 2 -- Turbo modunda süre yarısına düşer
+    end
+    wait(waitTime) -- Mesajdan önce bekle
+    
     if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
         local textChannels = TextChatService:WaitForChild("TextChannels", 5)
         if textChannels then
@@ -256,15 +291,18 @@ local isRunning = false
 local currentIndex = 1
 local startNumber = 1
 local targetNumber = 0
-local isJumperJack = true -- Varsayılan mod: Jumper Jack
+local currentMode = "JJ" -- Varsayılan mod: Jumper Jack
 
--- JJ/GJ Mod değiştirme mantığı
+-- JJ/GJ/HJ Mod değiştirme mantığı
 ModeButton.MouseButton1Click:Connect(function()
-    if isJumperJack then
-        isJumperJack = false
+    if currentMode == "JJ" then
+        currentMode = "GJ"
         ModeButton.Text = "GJ"
+    elseif currentMode == "GJ" then
+        currentMode = "HJ"
+        ModeButton.Text = "HJ"
     else
-        isJumperJack = true
+        currentMode = "JJ"
         ModeButton.Text = "JJ"
     end
 end)
@@ -276,17 +314,24 @@ PauseButton.MouseButton1Click:Connect(function()
             isPaused = false
             PauseButton.Text = "Durdur"
             -- Kaldığı yerden devam et
-            for i = currentIndex, targetNumber do
+            while currentIndex <= targetNumber do
                 if isPaused then break end
-                local message = numberToText(i, not isJumperJack)
-                sendChatMessage(message)
-                if humanoid then
-                    humanoid.Jump = true
+                local message = numberToText(currentIndex, currentMode)
+                if currentMode == "HJ" then
+                    for _, codepoint in utf8.codes(message) do
+                        if isPaused then break end
+                        local char = utf8.char(codepoint)
+                        if char ~= " " then
+                            sendChatMessage(char)
+                            if humanoid then humanoid.Jump = true end
+                        end
+                    end
                 end
-                local charCount = utf8.len(message)
-                local waitTime = (i > 2000) and (charCount * 0.25) or (0.5 + charCount * 0.25)
-                wait(waitTime)
-                currentIndex = i + 1
+                if not isPaused then
+                    sendChatMessage(message)
+                    if humanoid then humanoid.Jump = true end
+                end
+                currentIndex = currentIndex + 1
             end
             if not isPaused then
                 isRunning = false
@@ -327,17 +372,24 @@ StartButton.MouseButton1Click:Connect(function()
         currentIndex = startNumber
         PauseButton.Text = "Durdur"
         
-        for i = currentIndex, targetNumber do
+        while currentIndex <= targetNumber do
             if isPaused then break end
-            local message = numberToText(i, not isJumperJack)
-            sendChatMessage(message)
-            if humanoid then
-                humanoid.Jump = true
+            local message = numberToText(currentIndex, currentMode)
+            if currentMode == "HJ" then
+                for _, codepoint in utf8.codes(message) do
+                    if isPaused then break end
+                    local char = utf8.char(codepoint)
+                    if char ~= " " then
+                        sendChatMessage(char)
+                        if humanoid then humanoid.Jump = true end
+                    end
+                end
             end
-            local charCount = utf8.len(message)
-            local waitTime = (i > 2000) and (charCount * 0.25) or (0.5 + charCount * 0.25)
-            wait(waitTime)
-            currentIndex = i + 1
+            if not isPaused then
+                sendChatMessage(message)
+                if humanoid then humanoid.Jump = true end
+            end
+            currentIndex = currentIndex + 1
         end
         if not isPaused then
             isRunning = false
