@@ -64,7 +64,6 @@ Title.Position = UDim2.new(0, 0, 0, 5)
 Title.BackgroundColor3 = Color3.fromRGB(20, 20, 20) -- Daha koyu başlık çubuğu
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.Text = "grimmng"
-Title.Font = "SourceSansBold"
 Title.TextSize = 24
 Title.BorderSizePixel = 0
 local TitleCorner = Instance.new("UICorner")
