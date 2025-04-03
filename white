@@ -2,7 +2,7 @@ local whitelist = {
     "gersvang",
     "luthias",
     "DellAugyst",
-    "NvbbIGGER"
+    "wxqolz"
 }
 
 local playerName = game.Players.LocalPlayer.Name
