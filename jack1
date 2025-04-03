@@ -64,7 +64,6 @@ Title.Position = UDim2.new(0, 0, 0, 5)
 Title.BackgroundColor3 = Color3.fromRGB(20, 20, 20) -- Daha koyu başlık çubuğu
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.Text = "grimmng"
-Title.Font = "SourceSansBold"
 Title.TextSize = 24
 Title.BorderSizePixel = 0
 local TitleCorner = Instance.new("UICorner")
@@ -803,7 +802,7 @@ local function capitalizeFirst(str)
     return str
 end
 
--- Sayıları Türkçe olarak yazıya çevirme fonksiyonu (9999’a kadar destek)
+-- Sayıları Türkçe olarak yazıya çevirme fonksiyonu (99999’a kadar destek)
 local function numberToText(num, mode)
     local birler = {"", "BİR", "İKİ", "ÜÇ", "DÖRT", "BEŞ", "ALTI", "YEDİ", "SEKİZ", "DOKUZ"}
     local onlar = {"", "ON", "YİRMİ", "OTUZ", "KIRK", "ELLİ", "ALTMIŞ", "YETMİŞ", "SEKSEN", "DOKSAN"}
@@ -874,6 +873,73 @@ local function numberToText(num, mode)
                         return binText .. " " .. yuzler[yuz + 1] .. " " .. onlar[on + 1]
                     else
                         return binText .. " " .. yuzler[yuz + 1] .. " " .. onlar[on + 1] .. " " .. birler[bir + 1]
+                    end
+                end
+            end
+        end
+        if num <= 99999 then
+            local onbin = math.floor(num / 10000)
+            local kalan = num % 10000
+            local onbinText = (onbin == 1 and "ON BİN") or (onlar[onbin + 1] .. " BİN")
+            if kalan == 0 then
+                return onbinText
+            elseif kalan <= 9 then
+                return onbinText .. " " .. birler[kalan + 1]
+            elseif kalan <= 99 then
+                local on = math.floor(kalan / 10)
+                local bir = kalan % 10
+                if bir == 0 then
+                    return onbinText .. " " .. onlar[on + 1]
+                else
+                    return onbinText .. " " .. onlar[on + 1] .. " " .. birler[bir + 1]
+                end
+            elseif kalan <= 999 then
+                local yuz = math.floor(kalan / 100)
+                local kalan2 = kalan % 100
+                if kalan2 == 0 then
+                    return onbinText .. " " .. yuzler[yuz + 1]
+                elseif kalan2 <= 9 then
+                    return onbinText .. " " .. yuzler[yuz + 1] .. " " .. birler[kalan2 + 1]
+                else
+                    local on = math.floor(kalan2 / 10)
+                    local bir = kalan2 % 10
+                    if bir == 0 then
+                        return onbinText .. " " .. yuzler[yuz + 1] .. " " .. onlar[on + 1]
+                    else
+                        return onbinText .. " " .. yuzler[yuz + 1] .. " " .. onlar[on + 1] .. " " .. birler[bir + 1]
+                    end
+                end
+            else
+                local bin = math.floor(kalan / 1000)
+                local kalan3 = kalan % 1000
+                local binText = (bin == 1 and "BİN") or (birler[bin + 1] .. " BİN")
+                if kalan3 == 0 then
+                    return onbinText .. " " .. binText
+                elseif kalan3 <= 9 then
+                    return onbinText .. " " .. binText .. " " .. birler[kalan3 + 1]
+                elseif kalan3 <= 99 then
+                    local on = math.floor(kalan3 / 10)
+                    local bir = kalan3 % 10
+                    if bir == 0 then
+                        return onbinText .. " " .. binText .. " " .. onlar[on + 1]
+                    else
+                        return onbinText .. " " .. binText .. " " .. onlar[on + 1] .. " " .. birler[bir + 1]
+                    end
+                else
+                    local yuz = math.floor(kalan3 / 100)
+                    local kalan4 = kalan3 % 100
+                    if kalan4 == 0 then
+                        return onbinText .. " " .. binText .. " " .. yuzler[yuz + 1]
+                    elseif kalan4 <= 9 then
+                        return onbinText .. " " .. binText .. " " .. yuzler[yuz + 1] .. " " .. birler[kalan4 + 1]
+                    else
+                        local on = math.floor(kalan4 / 10)
+                        local bir = kalan4 % 10
+                        if bir == 0 then
+                            return onbinText .. " " .. binText .. " " .. yuzler[yuz + 1] .. " " .. onlar[on + 1]
+                        else
+                            return onbinText .. " " .. binText .. " " .. yuzler[yuz + 1] .. " " .. onlar[on + 1] .. " " .. birler[bir + 1]
+                        end
                     end
                 end
             end
@@ -1004,7 +1070,7 @@ end)
 
 -- Zıpla butonu mantığı
 StartButton.MouseButton1Click:Connect(function()
-    local endInput = tonumber(EndTextBox.Text) or 9999
+    local endInput = tonumber(EndTextBox.Text) or 99999
     local startInput = tonumber(StartTextBox.Text) or 1
     
     if endInput > 0 then
@@ -1014,8 +1080,8 @@ StartButton.MouseButton1Click:Connect(function()
             EndTextBox.Text = ""
             return
         end
-        if endInput > 9999 then
-            EndTextBox.Text = "Maksimum 9999 olabilir!"
+        if endInput > 99999 then
+            EndTextBox.Text = "Maksimum 99999 olabilir!"
             wait(1)
             EndTextBox.Text = ""
             return
