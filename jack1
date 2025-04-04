@@ -175,12 +175,12 @@ Title.Parent = Frame
 local TabFrame = Instance.new("Frame")
 TabFrame.Size = UDim2.new(0, 150, 0, 360)
 TabFrame.Position = UDim2.new(0, 0, 0, 40)
-TabFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+TabFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40) -- Biraz daha açık gri
 TabFrame.BorderSizePixel = 0
 TabFrame.Parent = Frame
 
 -- Sekme butonları
-local tabs = {"Giriş", "Jackler", "Karakter", "Görüş", "ChatLogs"}
+local tabs = {"Giriş", "Jackler", "Karakter", "Görüş"}
 local tabButtons = {}
 local currentTab = "Giriş"
 
@@ -205,7 +205,7 @@ local ContentFrame = Instance.new("Frame")
 ContentFrame.Size = UDim2.new(0, 450, 0, 360)
 ContentFrame.Position = UDim2.new(0, 150, 0, 40)
 ContentFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-ContentFrame.BackgroundTransparency = 0.4
+ContentFrame.BackgroundTransparency = 0.4 -- Şeffaf, sadece düzen için
 ContentFrame.BorderSizePixel = 0
 ContentFrame.Parent = Frame
 
@@ -310,237 +310,6 @@ for _, tabName in ipairs(tabs) do
     content.Parent = ContentFrame
     tabContents[tabName] = content
 end
-
--- Mevcut sekmelerin içerik bağlamalarını koru (örnek olarak Jackler ve diğerleri)
-tabContents["Jackler"] = JacklerContent
-tabContents["Karakter"] = CharacterContent
-tabContents["Giriş"] = IntroContent
-tabContents["Görüş"] = ViewContent
-
--- ChatLogs sekmesi için içerik
-local ChatLogsContent = Instance.new("Frame")
-ChatLogsContent.Size = UDim2.new(1, 0, 1, 0)
-ChatLogsContent.Position = UDim2.new(0, 0, 0, 0)
-ChatLogsContent.BackgroundTransparency = 1
-ChatLogsContent.Visible = false
-ChatLogsContent.Parent = ContentFrame
-tabContents["ChatLogs"] = ChatLogsContent
-
--- Chat Logger GUI elemanlarını ChatLogsContent içine yerleştirme
-local ChatLoggerFrame = Instance.new("Frame")
-ChatLoggerFrame.Size = UDim2.new(0, 400, 0, 300)
-ChatLoggerFrame.Position = UDim2.new(0.5, -200, 0, 10) -- Sekme içinde ortalanmış
-ChatLoggerFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-ChatLoggerFrame.BorderSizePixel = 0
-ChatLoggerFrame.Parent = ChatLogsContent
-
-local TitleBar = Instance.new("Frame")
-TitleBar.Size = UDim2.new(1, 0, 0, 30)
-TitleBar.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-TitleBar.BorderSizePixel = 0
-TitleBar.Parent = ChatLoggerFrame
-
-local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(1, 0, 1, 0)
-Title.BackgroundTransparency = 1
-Title.Text = ""
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.TextSize = 18
-Title.Font = Enum.Font.SourceSansBold
-Title.Parent = TitleBar
-
-local ChatDisplay = Instance.new("ScrollingFrame")
-ChatDisplay.Size = UDim2.new(1, -10, 1, -75)
-ChatDisplay.Position = UDim2.new(0, 5, 0, 35)
-ChatDisplay.BackgroundTransparency = 1
-ChatDisplay.ScrollBarThickness = 5
-ChatDisplay.Parent = ChatLoggerFrame
-
-local ChatLayout = Instance.new("UIListLayout")
-ChatLayout.SortOrder = Enum.SortOrder.LayoutOrder
-ChatLayout.Parent = ChatDisplay
-
-local SearchBox = Instance.new("TextBox")
-SearchBox.Size = UDim2.new(1, -10, 0, 30)
-SearchBox.Position = UDim2.new(0, 5, 1, -35)
-SearchBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-SearchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-SearchBox.PlaceholderText = "Kullanıcı adını gir..."
-SearchBox.TextSize = 14
-SearchBox.Font = Enum.Font.SourceSans
-SearchBox.Parent = ChatLoggerFrame
-
--- Beyaz liste
-local whitelist = {
-    ["Sağa dön!"] = -math.rad(90),
-    ["Sola dön!"] = math.rad(90),
-    ["Geriye dön!"] = math.rad(180),
-    ["Merkeze dön!"] = 0,
-    ["Merkez hizaya dön!"] = 0,
-    ["Sağ yüz!"] = -math.rad(90),
-    ["Sol yüz!"] = math.rad(90),
-    ["Kilit yüz!"] = 0,
-    ["Arka yüz!"] = math.rad(180),
-    ["Kontrol yüz!"] = 0,
-    ["Sol çapraz!"] = math.rad(45),
-    ["Sağ çapraz!"] = -math.rad(45)
-}
-
--- Spam sayacı ve mesaj kuyruğu için veriler
-local playerSpamData = {}
-local messageQueue = {}
-local isProcessing = false
-
--- Sürükleme değişkenleri (Ana GUI ile uyumlu hale getirildi)
-local dragging = false
-local dragInput, dragStart, startPos
-
--- Ana GUI'nin sürükleme mantığını ChatLoggerFrame ile paylaşma
-TitleBar.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        dragging = true
-        dragStart = input.Position
-        startPos = Frame.Position -- Ana Frame'in pozisyonunu kullanıyoruz
-    end
-end)
-
-TitleBar.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-        dragInput = input
-    end
-end)
-
-TitleBar.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        dragging = false
-        dragInput = nil
-    end
-end)
-
--- Ana GUI'nin sürükleme döngüsüne zaten bağlı, bu yüzden ek bir döngü gerekmez
-
--- Chat mesajlarını ekleme ve komutları işleme
-local function addChatMessage(playerName, message)
-    local targetName = SearchBox.Text:lower()
-    if targetName == "" or playerName:lower() == targetName then
-        local spamCount = "-"
-        local isWhitelisted = whitelist[message] ~= nil
-        
-        if not playerSpamData[playerName] then
-            playerSpamData[playerName] = {lastMessage = "", lastTime = 0, spamCount = 0}
-        end
-        
-        local spamData = playerSpamData[playerName]
-        local currentTime = os.clock()
-        
-        if isWhitelisted then
-            if spamData.lastMessage == message and (currentTime - spamData.lastTime) <= 5 then
-                spamData.spamCount = spamData.spamCount + 1
-            elseif whitelist[spamData.lastMessage] and spamData.lastMessage ~= message then
-                spamData.spamCount = 1
-            else
-                spamData.spamCount = 1
-            end
-            spamData.lastMessage = message
-            spamData.lastTime = currentTime
-            spamCount = tostring(spamData.spamCount)
-        else
-            spamCount = "-"
-        end
-        
-        local messageLabel = Instance.new("TextLabel")
-        messageLabel.Size = UDim2.new(1, 0, 0, 20)
-        messageLabel.BackgroundTransparency = 1
-        messageLabel.Text = "[" .. spamCount .. "] " .. tostring(playerName) .. ": " .. tostring(message)
-        messageLabel.TextSize = 14
-        messageLabel.Font = Enum.Font.SourceSans
-        messageLabel.TextXAlignment = Enum.TextXAlignment.Left
-        messageLabel.TextWrapped = true
-        messageLabel.TextTruncate = Enum.TextTruncate.None
-        
-        messageLabel.TextColor3 = isWhitelisted and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(150, 150, 150)
-        
-        messageLabel.Parent = ChatDisplay
-        
-        local textService = game:GetService("TextService")
-        local textBounds = textService:GetTextSize(
-            messageLabel.Text,
-            messageLabel.TextSize,
-            messageLabel.Font,
-            Vector2.new(ChatDisplay.AbsoluteSize.X, 1000)
-        )
-        messageLabel.Size = UDim2.new(1, 0, 0, math.max(20, textBounds.Y))
-        
-        ChatDisplay.CanvasSize = UDim2.new(0, 0, 0, ChatLayout.AbsoluteContentSize.Y)
-        ChatDisplay.CanvasPosition = Vector2.new(0, ChatLayout.AbsoluteContentSize.Y - ChatDisplay.AbsoluteSize.Y)
-        
-        if isWhitelisted and playerName == player.Name then
-            if humanoid then
-                local rotationAngle = whitelist[message]
-                if rotationAngle then
-                    local currentPosition = humanoidRootPart.Position
-                    humanoidRootPart.CFrame = CFrame.new(currentPosition) * CFrame.Angles(0, rotationAngle, 0)
-                end
-            end
-        end
-    end
-end
-
--- Mesaj kuyruğunu işleme fonksiyonu
-local function processMessageQueue()
-    if isProcessing or #messageQueue == 0 then return end
-    
-    isProcessing = true
-    while #messageQueue > 0 do
-        local msg = table.remove(messageQueue, 1)
-        addChatMessage(msg.playerName, msg.message)
-        wait(0.05)
-    end
-    isProcessing = false
-end
-
--- Mesajları kuyruğa ekleme
-local function queueMessage(playerName, message)
-    table.insert(messageQueue, {playerName = playerName, message = message})
-    processMessageQueue()
-end
-
--- Mevcut mesajları temizleme
-local function clearChat()
-    for _, child in pairs(ChatDisplay:GetChildren()) do
-        if child:IsA("TextLabel") then
-            child:Destroy()
-        end
-    end
-    ChatDisplay.CanvasSize = UDim2.new(0, 0, 0, 0)
-    ChatDisplay.CanvasPosition = Vector2.new(0, 0)
-end
-
-SearchBox:GetPropertyChangedSignal("Text"):Connect(clearChat)
-
--- Oyuncuların mesajlarını dinleme fonksiyonu
-local function setupChatListener(plr)
-    if plr then
-        plr.Chatted:Connect(function(message)
-            queueMessage(plr.Name, message)
-        end)
-    end
-end
-
--- Mevcut oyuncular için dinleyici kur
-for _, plr in pairs(game.Players:GetPlayers()) do
-    setupChatListener(plr)
-end
-
--- Yeni oyuncular için dinleyici kur
-game.Players.PlayerAdded:Connect(function(plr)
-    setupChatListener(plr)
-end)
-
--- Oyuncu ayrıldığında spam verisini temizle
-game.Players.PlayerRemoving:Connect(function(plr)
-    playerSpamData[plr.Name] = nil
-end)
 
 -- Jackler sekmesi içeriğini bağla
 JacklerContent.Visible = false
@@ -1211,65 +980,77 @@ local function numberToText(num, mode)
         if num <= 99999 then
             local onbin = math.floor(num / 10000)
             local kalan = num % 10000
-            local onbinText = (onbin == 1 and "ON BİN") or (onlar[onbin + 1] .. " BİN")
-            if kalan == 0 then
-                return onbinText
-            elseif kalan <= 9 then
-                return onbinText .. " " .. birler[kalan + 1]
-            elseif kalan <= 99 then
-                local on = math.floor(kalan / 10)
-                local bir = kalan % 10
-                if bir == 0 then
-                    return onbinText .. " " .. onlar[on + 1]
+            if onbin > 0 then
+                local bin = math.floor(kalan / 1000)
+                local kalan2 = kalan % 1000
+                local onbinText
+                if bin > 0 then
+                    -- On binler ve binler birleşik şekilde işlenir
+                    local onbinBinNum = onbin * 10 + bin
+                    onbinText = onlar[onbinBinNum + 1] .. " BİN"
                 else
-                    return onbinText .. " " .. onlar[on + 1] .. " " .. birler[bir + 1]
+                    onbinText = onlar[onbin + 1] .. " BİN"
                 end
-            elseif kalan <= 999 then
-                local yuz = math.floor(kalan / 100)
-                local kalan2 = kalan % 100
                 if kalan2 == 0 then
-                    return onbinText .. " " .. yuzler[yuz + 1]
+                    return onbinText
                 elseif kalan2 <= 9 then
-                    return onbinText .. " " .. yuzler[yuz + 1] .. " " .. birler[kalan2 + 1]
-                else
+                    return onbinText .. " " .. birler[kalan2 + 1]
+                elseif kalan2 <= 99 then
                     local on = math.floor(kalan2 / 10)
                     local bir = kalan2 % 10
                     if bir == 0 then
-                        return onbinText .. " " .. yuzler[yuz + 1] .. " " .. onlar[on + 1]
+                        return onbinText .. " " .. onlar[on + 1]
                     else
-                        return onbinText .. " " .. yuzler[yuz + 1] .. " " .. onlar[on + 1] .. " " .. birler[bir + 1]
+                        return onbinText .. " " .. onlar[on + 1] .. " " .. birler[bir + 1]
+                    end
+                else
+                    local yuz = math.floor(kalan2 / 100)
+                    local kalan3 = kalan2 % 100
+                    if kalan3 == 0 then
+                        return onbinText .. " " .. yuzler[yuz + 1]
+                    elseif kalan3 <= 9 then
+                        return onbinText .. " " .. yuzler[yuz + 1] .. " " .. birler[kalan3 + 1]
+                    else
+                        local on = math.floor(kalan3 / 10)
+                        local bir = kalan3 % 10
+                        if bir == 0 then
+                            return onbinText .. " " .. yuzler[yuz + 1] .. " " .. onlar[on + 1]
+                        else
+                            return onbinText .. " " .. yuzler[yuz + 1] .. " " .. onlar[on + 1] .. " " .. birler[bir + 1]
+                        end
                     end
                 end
             else
-                local bin = math.floor(kalan / 1000)
-                local kalan3 = kalan % 1000
+                -- 10000'den küçük sayılar için eski mantık
+                local bin = math.floor(num / 1000)
+                local kalan = num % 1000
                 local binText = (bin == 1 and "BİN") or (birler[bin + 1] .. " BİN")
-                if kalan3 == 0 then
-                    return onbinText .. " " .. binText
-                elseif kalan3 <= 9 then
-                    return onbinText .. " " .. binText .. " " .. birler[kalan3 + 1]
-                elseif kalan3 <= 99 then
-                    local on = math.floor(kalan3 / 10)
-                    local bir = kalan3 % 10
+                if kalan == 0 then
+                    return binText
+                elseif kalan <= 9 then
+                    return binText .. " " .. birler[kalan + 1]
+                elseif kalan <= 99 then
+                    local on = math.floor(kalan / 10)
+                    local bir = kalan % 10
                     if bir == 0 then
-                        return onbinText .. " " .. binText .. " " .. onlar[on + 1]
+                        return binText .. " " .. onlar[on + 1]
                     else
-                        return onbinText .. " " .. binText .. " " .. onlar[on + 1] .. " " .. birler[bir + 1]
+                        return binText .. " " .. onlar[on + 1] .. " " .. birler[bir + 1]
                     end
                 else
-                    local yuz = math.floor(kalan3 / 100)
-                    local kalan4 = kalan3 % 100
-                    if kalan4 == 0 then
-                        return onbinText .. " " .. binText .. " " .. yuzler[yuz + 1]
-                    elseif kalan4 <= 9 then
-                        return onbinText .. " " .. binText .. " " .. yuzler[yuz + 1] .. " " .. birler[kalan4 + 1]
+                    local yuz = math.floor(kalan / 100)
+                    local kalan2 = kalan % 100
+                    if kalan2 == 0 then
+                        return binText .. " " .. yuzler[yuz + 1]
+                    elseif kalan2 <= 9 then
+                        return binText .. " " .. yuzler[yuz + 1] .. " " .. birler[kalan2 + 1]
                     else
-                        local on = math.floor(kalan4 / 10)
-                        local bir = kalan4 % 10
+                        local on = math.floor(kalan2 / 10)
+                        local bir = kalan2 % 10
                         if bir == 0 then
-                            return onbinText .. " " .. binText .. " " .. yuzler[yuz + 1] .. " " .. onlar[on + 1]
+                            return binText .. " " .. yuzler[yuz + 1] .. " " .. onlar[on + 1]
                         else
-                            return onbinText .. " " .. binText .. " " .. yuzler[yuz + 1] .. " " .. onlar[on + 1] .. " " .. birler[bir + 1]
+                            return binText .. " " .. yuzler[yuz + 1] .. " " .. onlar[on + 1] .. " " .. birler[bir + 1]
                         end
                     end
                 end
@@ -1283,7 +1064,7 @@ local function numberToText(num, mode)
     elseif mode == "GJ" then
         return formatGJ(text)
     elseif mode == "HJ" then
-        return text -- HJ'de metni döndürüyoruz, ama harfleri ayrı işleyeceğiz
+        return text
     end
 end
 
