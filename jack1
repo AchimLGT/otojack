@@ -370,17 +370,29 @@ SearchBox.Parent = ChatLoggerFrame
 -- Beyaz liste
 local whitelist = {
     ["Sağa dön!"] = -math.rad(90),
+    ["Sağa dön."] = -math.rad(90),
     ["Sola dön!"] = math.rad(90),
+    ["Sola dön."] = math.rad(90),
     ["Geriye dön!"] = math.rad(180),
+    ["Geriye dön."] = math.rad(180),
     ["Merkeze dön!"] = 0,
+    ["Merkeze dön."] = 0,
     ["Merkez hizaya dön!"] = 0,
+    ["Merkez hizaya dön."] = 0,
     ["Sağ yüz!"] = -math.rad(90),
+    ["Sağ yüz."] = -math.rad(90),
     ["Sol yüz!"] = math.rad(90),
+    ["Sol yüz."] = math.rad(90),
     ["Kilit yüz!"] = 0,
+    ["Kilit yüz."] = 0,
     ["Arka yüz!"] = math.rad(180),
+    ["Arka yüz."] = math.rad(180),
     ["Kontrol yüz!"] = 0,
+    ["Kontrol yüz."] = 0,
     ["Sol çapraz!"] = math.rad(45),
-    ["Sağ çapraz!"] = -math.rad(45)
+    ["Sol çapraz."] = math.rad(45),
+    ["Sağ çapraz!"] = -math.rad(45),
+    ["Sağ çapraz."] = -math.rad(45)
 }
 
 -- Spam sayacı ve mesaj kuyruğu için veriler
