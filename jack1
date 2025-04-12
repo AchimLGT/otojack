@@ -381,6 +381,7 @@ local whitelist = {
     ["Merkez yüz."] = 0,
     ["Merkez hizaya dön!"] = 0,
     ["Merkez hizaya dön."] = 0,
+    ["Merkezi hizaya dön."] = 0,
     ["Sağ yüz!"] = -math.rad(90),
     ["Sağ yüz."] = -math.rad(90),
     ["Sol yüz!"] = math.rad(90),
